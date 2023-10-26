@@ -1,0 +1,25 @@
+#.gitlab-ci.yml
+
+# Định nghĩa các stages cho pipeline
+stages:
+  - build
+
+# Định nghĩa job để kiểm tra và build khi có merge request
+build:
+  stage: build
+  script:
+    - yarn install # Cài đặt các dependencies
+    - yarn dev # Chạy lệnh yarn dev
+    - yarn build # Chạy lệnh yarn build
+  only:
+    - merge_requests # Chỉ chạy khi có merge request
+  except:
+    - master # Không chạy trên nhánh master
+
+# Cấu hình để hiển thị kết quả của pipeline
+# Nếu quá trình build gặp lỗi, pipeline sẽ kết thúc và hiển thị thông báo lỗi
+# Nếu không có lỗi, pipeline sẽ thành công
+# Bạn có thể tùy chỉnh các thông báo và các thiết lập khác
+# tùy theo yêu cầu của dự án của bạn
+after_script:
+  - if [[ $CI_PIPELINE_RESULT == "failed" ]]; then exit 1; fi
